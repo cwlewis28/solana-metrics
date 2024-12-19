@@ -1,0 +1,14 @@
+apiVersion: 1
+
+datasources:
+  - name: SolanaMainnet
+    type: prometheus
+    access: proxy
+    url: http://mainnet-prometheus:9090
+    isDefault: true
+    editable: true
+  - name: SolanaTestnet
+    type: prometheus
+    access: proxy
+    url: http://testnet-prometheus:9090
+    editable: true
