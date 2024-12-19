@@ -17,3 +17,5 @@ Use a query like below to graph vote rate for specific validators over time.
 ```promql
  avg_over_time(rate(solana_validator_credits{identityPubkey=~"Hfr53eRsVCstCz6C51EDPxWzQFbiuogZDaZkHbrjReKF"}[30m])[3h:1m])
 ```
+
+![Alt text](./docs/grafana.png "Grafana")
