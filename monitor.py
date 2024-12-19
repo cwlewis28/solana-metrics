@@ -1,3 +1,5 @@
+import datetime
+
 import solana
 import requests
 import math
@@ -24,6 +26,7 @@ def get_vote_credits(host):
 
 def send_vote_credits_to_pushgateway(host):
     while True:
+        print(f"{datetime.datetime.now().strftime("'%Y-%m-%d %H:%M:%S'")} Getting validator credits from {host}")
         cluster_name = host.split("//")[1].split(".")[1]
         validators = get_vote_credits(host)
 
@@ -45,4 +48,5 @@ def send_vote_credits_to_pushgateway(host):
 
 
 if __name__ == '__main__':
+    print("Starting monitoring")
     send_vote_credits_to_pushgateway('https://api.testnet.solana.com')

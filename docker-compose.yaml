@@ -1,0 +1,55 @@
+services:
+  monitor:
+    build: .
+    command: ["python", "monitor.py"]
+    entrypoint: ["/usr/sbin/cron", "-f", "-l", "2"]
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/app
+    networks:
+        - monitoring
+
+  testnet-prometheus:
+    image: prom/prometheus:latest
+    container_name: testnet-prometheus
+    volumes:
+      - ./configs/testnet/prometheus.yml:/etc/prometheus/prometheus.yml
+      - testnet_prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.retention.time=30d"
+    networks:
+      - monitoring
+
+  testnet-pushgateway:
+    image: prom/pushgateway:latest
+    container_name: testnet-pushgateway
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=admin
+    networks:
+      - monitoring
+    volumes:
+      - ./configs/testnet/grafana/provisioning/datasources/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
+      - grafana_data:/var/lib/grafana
+
+networks:
+  monitoring:
+    driver: bridge
+
+volumes:
+  testnet_prometheus_data:
+    driver: local
+  mainnet_prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
